@@ -1,0 +1,115 @@
+# MCP Server Registry - Source of truth for all MCP server configurations
+# Environment variables use ${VAR_NAME} syntax, resolved by chezmoi/direnv/shell
+version: 1
+
+defaults:
+  mcp_host: "http://mcp.bultot.nl"
+  mcp_remote_version: "0.1.38"
+  scope_paths:
+    personal: "${HOME}/projects/personal"
+    backbase: "${HOME}/projects/backbase"
+
+servers:
+  context7:
+    transport: http
+    url: "${MCP_HOST}/context7/mcp"
+    scope: [universal]
+    client: [claude-code]
+    health:
+      endpoint: "${MCP_HOST}/context7/mcp"
+      method: GET
+      expect_status: 400
+    description: "Documentation fetcher for library APIs"
+
+  stitch:
+    transport: stdio
+    command: npx
+    args: ["@_davideast/stitch-mcp", "proxy"]
+    env:
+      STITCH_API_KEY: "${STITCH_API_KEY}"
+    scope: [universal]
+    client: [claude-code, claude-desktop]
+    health:
+      command: "npx @_davideast/stitch-mcp --version"
+      expect_exit: 0
+    description: "Design-to-code tool"
+
+  obsidian:
+    transport: stdio
+    command: npx
+    args: ["@bitbonsai/mcpvault@latest", "/Users/robin@backbase.com/ObsidianVault"]
+    scope: [personal]
+    client: [claude-code]
+    health:
+      command: "test -d /Users/robin@backbase.com/ObsidianVault"
+      expect_exit: 0
+    description: "Obsidian vault access"
+
+  pencil:
+    transport: stdio
+    command: "${HOME}/.cursor/extensions/highagency.pencildev-0.6.36-universal/out/mcp-server-darwin-arm64"
+    args: ["--app", "claude"]
+    scope: [universal]
+    client: [claude-code, claude-desktop]
+    health:
+      command: "test -f ${HOME}/.cursor/extensions/highagency.pencildev-0.6.36-universal/out/mcp-server-darwin-arm64"
+      expect_exit: 0
+    description: "Design tool"
+
+  sanity:
+    transport: http
+    url: "https://mcp.sanity.io"
+    headers:
+      Authorization: "Bearer ${SANITY_AUTH_TOKEN}"
+    scope: [backbase]
+    client: [claude-code]
+    health:
+      endpoint: "https://mcp.sanity.io"
+      method: GET
+      expect_status: 405
+    description: "Sanity CMS integration"
+
+  # Cloud connectors (tracked for inventory, generator skips these)
+  google-workspace:
+    managed: cloud
+    scope: [backbase]
+    health:
+      endpoint: "https://www.googleapis.com/oauth2/v1/tokeninfo"
+      method: GET
+    description: "Google Workspace via Claude.ai connector"
+
+  gmail:
+    managed: cloud
+    scope: [personal]
+    health: null
+    description: "Gmail via Claude.ai connector"
+
+  todoist:
+    managed: cloud
+    scope: [personal]
+    health: null
+    description: "Todoist via Claude.ai connector"
+
+  google-calendar:
+    managed: cloud
+    scope: [personal]
+    health: null
+    description: "Google Calendar via Claude.ai connector"
+
+  slack:
+    managed: cloud
+    scope: [backbase]
+    health: null
+    description: "Slack via Claude.ai connector"
+
+  salesforce:
+    managed: cloud
+    scope: [backbase]
+    health: null
+    description: "Salesforce via Claude.ai connector"
+
+  google-slides:
+    managed: cloud
+    scope: [backbase]
+    health: null
+    description: "Google Slides via Claude.ai connector"

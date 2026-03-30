@@ -1,0 +1,180 @@
+{{- /* settings-base.json.tmpl - Base template for Claude Code settings */ -}}
+{{- /* MCP servers injected by mcp-generate.py via %%MCP_SERVERS%% placeholder */ -}}
+{{- /* Secrets: STITCH_API_KEY, OTEL basic auth, LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY */ -}}
+{{- /* Non-secret config (hooks, permissions, plugins) kept as literals */ -}}
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "STITCH_API_KEY": "{{ onepasswordRead "op://Integrations/stitch-api-key/credential" }}",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_LOGS_EXPORTER": "otlp",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "https://langfuse.bultot.nl/api/public/otel",
+    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Basic {{ onepasswordRead "op://Integrations/langfuse-otel/basic-auth" }}",
+    "OTEL_LOG_USER_PROMPTS": "1",
+    "OTEL_LOG_TOOL_DETAILS": "1",
+    "LANGFUSE_SECRET_KEY": "{{ onepasswordRead "op://Integrations/langfuse/secret-key" }}",
+    "LANGFUSE_PUBLIC_KEY": "{{ onepasswordRead "op://Integrations/langfuse/public-key" }}",
+    "LANGFUSE_BASE_URL": "https://langfuse.bultot.nl"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__stitch",
+      "mcp__pencil"
+    ],
+    "defaultMode": "plan"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/robin@backbase.com/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/robin@backbase.com/.claude-control/hooks/status-hook.sh",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/robin@backbase.com/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/robin@backbase.com/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "context7@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "playwright@claude-plugins-official": false,
+    "ralph-loop@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": false,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "voiceEnabled": true,
+  "autoDreamEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "mcpServers": %%MCP_SERVERS%%,
+  "privacy": {
+    "disableTraining": true
+  },
+  "experiments": {
+    "agentTeams": true
+  }
+}
