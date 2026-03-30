@@ -34,14 +34,33 @@ CHEZMOI_SECRET_MAP = {
 }
 
 # Post-serialization replacements: placeholder -> actual Go template expression.
-# The replacement includes wrapping double quotes so the result is valid JSON after
-# chezmoi template resolution (onepasswordRead returns a raw string).
+# Two replacement passes ensure correct handling:
+#
+# Pass 1 (CHEZMOI_SECRET_RESOLVE): Replaces standalone JSON values where the entire
+# value is a placeholder. Pattern includes wrapping quotes so the result is valid JSON
+# after chezmoi template resolution (onepasswordRead returns a raw string).
+# Example: "CHEZMOI_PLACEHOLDER_BRAVE_API_KEY" -> "{{ onepasswordRead "..." }}"
+#
+# Pass 2 (CHEZMOI_SECRET_RESOLVE_EMBEDDED): Replaces placeholders embedded inside
+# larger JSON strings (e.g., Bearer tokens, URL paths). Pattern is the bare token
+# without quotes; the replacement is the bare Go template expression.
+# Example: "Bearer CHEZMOI_PLACEHOLDER_JINA_API_KEY" -> "Bearer {{ onepasswordRead "..." }}"
 CHEZMOI_SECRET_RESOLVE = {
     '"CHEZMOI_PLACEHOLDER_STITCH_API_KEY"': '"{{ onepasswordRead "op://Integrations/stitch-api-key/credential" }}"',
     '"CHEZMOI_PLACEHOLDER_SANITY_AUTH_TOKEN"': '"{{ onepasswordRead "op://Integrations/sanity-cms/credential" }}"',
     '"CHEZMOI_PLACEHOLDER_BRAVE_API_KEY"': '"{{ onepasswordRead "op://Integrations/brave-api-key/credential" }}"',
     '"CHEZMOI_PLACEHOLDER_JINA_API_KEY"': '"{{ onepasswordRead "op://Integrations/jina-api-key/credential" }}"',
     '"CHEZMOI_PLACEHOLDER_FIRECRAWL_API_KEY"': '"{{ onepasswordRead "op://Integrations/firecrawl-api-key/credential" }}"',
+}
+
+# Embedded replacements for placeholders inside larger strings (Bearer tokens, URLs).
+# Applied AFTER standalone replacements so standalone matches take priority.
+CHEZMOI_SECRET_RESOLVE_EMBEDDED = {
+    "CHEZMOI_PLACEHOLDER_STITCH_API_KEY": '{{ onepasswordRead "op://Integrations/stitch-api-key/credential" }}',
+    "CHEZMOI_PLACEHOLDER_SANITY_AUTH_TOKEN": '{{ onepasswordRead "op://Integrations/sanity-cms/credential" }}',
+    "CHEZMOI_PLACEHOLDER_BRAVE_API_KEY": '{{ onepasswordRead "op://Integrations/brave-api-key/credential" }}',
+    "CHEZMOI_PLACEHOLDER_JINA_API_KEY": '{{ onepasswordRead "op://Integrations/jina-api-key/credential" }}',
+    "CHEZMOI_PLACEHOLDER_FIRECRAWL_API_KEY": '{{ onepasswordRead "op://Integrations/firecrawl-api-key/credential" }}',
 }
 
 # Resolve ${HOME} to the actual home directory for chezmoi templates.
@@ -165,7 +184,11 @@ def generate_settings_json(
 
     # Post-serialization: replace placeholder tokens with actual Go template expressions.
     # This must happen after json.dumps to avoid double-quote escaping.
+    # Pass 1: standalone values (whole JSON value is a placeholder)
     for placeholder, template_expr in CHEZMOI_SECRET_RESOLVE.items():
+        mcp_json = mcp_json.replace(placeholder, template_expr)
+    # Pass 2: embedded values (placeholder inside a larger string, e.g. Bearer token, URL)
+    for placeholder, template_expr in CHEZMOI_SECRET_RESOLVE_EMBEDDED.items():
         mcp_json = mcp_json.replace(placeholder, template_expr)
 
     # Read the base template
@@ -212,7 +235,11 @@ def generate_desktop_config(
     mcp_json_str = json.dumps(mcp_servers, indent=2)
 
     # Post-serialization: replace placeholder tokens with actual Go template expressions
+    # Pass 1: standalone values
     for placeholder, template_expr in CHEZMOI_SECRET_RESOLVE.items():
+        mcp_json_str = mcp_json_str.replace(placeholder, template_expr)
+    # Pass 2: embedded values (Bearer tokens, URL paths)
+    for placeholder, template_expr in CHEZMOI_SECRET_RESOLVE_EMBEDDED.items():
         mcp_json_str = mcp_json_str.replace(placeholder, template_expr)
 
     # The .tmpl extension tells chezmoi to process Go template expressions first,

@@ -191,6 +191,27 @@
               "--app",
               "claude"
           ]
+      },
+      "brave-search": {
+          "command": "npx",
+          "args": [
+              "-y",
+              "@brave/brave-search-mcp-server"
+          ],
+          "env": {
+              "BRAVE_API_KEY": "{{ onepasswordRead "op://Integrations/brave-api-key/credential" }}"
+          }
+      },
+      "jina": {
+          "type": "url",
+          "url": "https://mcp.jina.ai/v1",
+          "headers": {
+              "Authorization": "Bearer {{ onepasswordRead "op://Integrations/jina-api-key/credential" }}"
+          }
+      },
+      "firecrawl": {
+          "type": "url",
+          "url": "https://mcp.firecrawl.dev/{{ onepasswordRead "op://Integrations/firecrawl-api-key/credential" }}/v2/mcp"
       }
   },
   "privacy": {

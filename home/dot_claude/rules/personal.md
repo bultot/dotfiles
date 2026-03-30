@@ -11,6 +11,9 @@ paths:
 - stitch (universal): Design-to-code tool
 - obsidian (personal): Obsidian vault access
 - pencil (universal): Design tool
+- brave-search (universal): Web, image, video, news, and local search via Brave
+- jina (universal): URL-to-markdown, web search, image search, screenshots, PDF extraction
+- firecrawl (universal): Web scraping, crawling, brand extraction, and search
 
 ## Git Identity
 - Email: robin@bultot.nl (personal)

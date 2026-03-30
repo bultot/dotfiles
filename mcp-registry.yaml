@@ -92,7 +92,7 @@ servers:
     health:
       endpoint: "https://mcp.jina.ai/v1"
       method: GET
-      expect_status: 200
+      expect_status: 406
     description: "URL-to-markdown, web search, image search, screenshots, PDF extraction"
 
   firecrawl:
@@ -103,7 +103,7 @@ servers:
     health:
       endpoint: "https://mcp.firecrawl.dev/v2/mcp"
       method: GET
-      expect_status: 401
+      expect_status: 400
     description: "Web scraping, crawling, brand extraction, and search"
 
   # Cloud connectors (tracked for inventory, generator skips these)

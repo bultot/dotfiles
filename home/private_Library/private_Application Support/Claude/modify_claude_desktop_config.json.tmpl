@@ -25,6 +25,32 @@ MCP_SERVERS_JSON = """
       "--app",
       "claude"
     ]
+  },
+  "brave-search": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@brave/brave-search-mcp-server"
+    ],
+    "env": {
+      "BRAVE_API_KEY": "{{ onepasswordRead "op://Integrations/brave-api-key/credential" }}"
+    }
+  },
+  "jina": {
+    "command": "npx",
+    "args": [
+      "mcp-remote@0.1.38",
+      "https://mcp.jina.ai/v1",
+      "--header",
+      "Authorization: Bearer {{ onepasswordRead "op://Integrations/jina-api-key/credential" }}"
+    ]
+  },
+  "firecrawl": {
+    "command": "npx",
+    "args": [
+      "mcp-remote@0.1.38",
+      "https://mcp.firecrawl.dev/{{ onepasswordRead "op://Integrations/firecrawl-api-key/credential" }}/v2/mcp"
+    ]
   }
 }
 """
