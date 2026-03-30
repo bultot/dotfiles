@@ -40,3 +40,6 @@ alias claude='command claude --dangerously-skip-permissions'
 
 # 1Password: personal account shortcut (bypasses SA token for admin ops)
 alias op-personal='OP_SERVICE_ACCOUNT_TOKEN="" op'
+
+# MCP server health check
+alias mcp-health="python3 ~/.local/share/chezmoi/scripts/mcp-health.py"
