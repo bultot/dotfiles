@@ -1,6 +1,7 @@
-{{- /* settings.json.tmpl - Claude Code settings with secrets resolved from 1Password */ -}}
+{{- /* settings-base.json.tmpl - Base template for Claude Code settings */ -}}
+{{- /* MCP servers injected by mcp-generate.py (replaces placeholder below) */ -}}
 {{- /* Secrets: STITCH_API_KEY, OTEL basic auth, LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY */ -}}
-{{- /* Non-secret config (hooks, permissions, plugins, MCP servers) kept as literals */ -}}
+{{- /* Non-secret config (hooks, permissions, plugins) kept as literals */ -}}
 {
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
@@ -170,20 +171,27 @@
   "autoDreamEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "mcpServers": {
-    "stitch": {
-      "command": "npx",
-      "args": [
-        "@_davideast/stitch-mcp",
-        "proxy"
-      ]
-    },
-    "obsidian": {
-      "command": "npx",
-      "args": [
-        "@bitbonsai/mcpvault@latest",
-        "/Users/robin@backbase.com/ObsidianVault"
-      ]
-    }
+      "context7": {
+          "type": "url",
+          "url": "http://mcp.bultot.nl/context7/mcp"
+      },
+      "stitch": {
+          "command": "npx",
+          "args": [
+              "@_davideast/stitch-mcp",
+              "proxy"
+          ],
+          "env": {
+              "STITCH_API_KEY": "{{ onepasswordRead "op://Integrations/stitch-api-key/credential" }}"
+          }
+      },
+      "pencil": {
+          "command": "/Users/robin@backbase.com/.cursor/extensions/highagency.pencildev-0.6.36-universal/out/mcp-server-darwin-arm64",
+          "args": [
+              "--app",
+              "claude"
+          ]
+      }
   },
   "privacy": {
     "disableTraining": true
