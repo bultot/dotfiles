@@ -17,6 +17,9 @@ brew "jq"
 # Terminal
 cask "ghostty"
 
+# Window management
+cask "aerospace"
+
 # Session management
 brew "tmux"
 
