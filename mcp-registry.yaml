@@ -3,7 +3,7 @@
 version: 1
 
 defaults:
-  mcp_host: "http://mcp.bultot.nl"
+  mcp_host: "http://mcp.bultot.nl:8080"
   mcp_remote_version: "0.1.38"
   scope_paths:
     personal: "${HOME}/projects/personal"
@@ -12,11 +12,11 @@ defaults:
 servers:
   context7:
     transport: http
-    url: "${MCP_HOST}/context7/mcp"
+    url: "${MCP_HOST}/mcp"
     scope: [universal]
     client: [claude-code]
     health:
-      endpoint: "${MCP_HOST}/context7/mcp"
+      endpoint: "${MCP_HOST}/mcp"
       method: GET
       expect_status: 400
     description: "Documentation fetcher for library APIs"
