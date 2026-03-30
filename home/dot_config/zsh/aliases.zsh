@@ -43,3 +43,8 @@ alias op-personal='OP_SERVICE_ACCOUNT_TOKEN="" op'
 
 # MCP server health check
 alias mcp-health="python3 ~/.local/share/chezmoi/scripts/mcp-health.py"
+
+# Project health checks (on-demand, per D-14/D-15)
+alias dev-health-node="bash ~/.local/share/chezmoi/scripts/health/node-health.sh"
+alias dev-health-python="bash ~/.local/share/chezmoi/scripts/health/python-health.sh"
+alias dev-health-infra="bash ~/.local/share/chezmoi/scripts/health/infra-health.sh"
