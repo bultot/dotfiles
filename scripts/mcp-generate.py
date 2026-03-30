@@ -28,6 +28,9 @@ import yaml
 CHEZMOI_SECRET_MAP = {
     "${STITCH_API_KEY}": "CHEZMOI_PLACEHOLDER_STITCH_API_KEY",
     "${SANITY_AUTH_TOKEN}": "CHEZMOI_PLACEHOLDER_SANITY_AUTH_TOKEN",
+    "${BRAVE_API_KEY}": "CHEZMOI_PLACEHOLDER_BRAVE_API_KEY",
+    "${JINA_API_KEY}": "CHEZMOI_PLACEHOLDER_JINA_API_KEY",
+    "${FIRECRAWL_API_KEY}": "CHEZMOI_PLACEHOLDER_FIRECRAWL_API_KEY",
 }
 
 # Post-serialization replacements: placeholder -> actual Go template expression.
@@ -36,6 +39,9 @@ CHEZMOI_SECRET_MAP = {
 CHEZMOI_SECRET_RESOLVE = {
     '"CHEZMOI_PLACEHOLDER_STITCH_API_KEY"': '"{{ onepasswordRead "op://Integrations/stitch-api-key/credential" }}"',
     '"CHEZMOI_PLACEHOLDER_SANITY_AUTH_TOKEN"': '"{{ onepasswordRead "op://Integrations/sanity-cms/credential" }}"',
+    '"CHEZMOI_PLACEHOLDER_BRAVE_API_KEY"': '"{{ onepasswordRead "op://Integrations/brave-api-key/credential" }}"',
+    '"CHEZMOI_PLACEHOLDER_JINA_API_KEY"': '"{{ onepasswordRead "op://Integrations/jina-api-key/credential" }}"',
+    '"CHEZMOI_PLACEHOLDER_FIRECRAWL_API_KEY"': '"{{ onepasswordRead "op://Integrations/firecrawl-api-key/credential" }}"',
 }
 
 # Resolve ${HOME} to the actual home directory for chezmoi templates.
