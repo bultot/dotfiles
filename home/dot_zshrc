@@ -1,0 +1,19 @@
+# ~/.zshrc - minimal entry point
+# Config split into ~/.config/zsh/ files per concern
+
+# Source config files
+for config_file in ~/.config/zsh/{exports,aliases,functions,plugins}.zsh; do
+    [[ -f "$config_file" ]] && source "$config_file"
+done
+unset config_file
+
+# Tool initializations (order matters: some depend on PATH from exports.zsh)
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+eval "$(direnv hook zsh)"
+
+# fzf configuration
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'

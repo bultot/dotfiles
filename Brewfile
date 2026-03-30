@@ -39,3 +39,10 @@ brew "python"
 brew "git"
 brew "gh"
 brew "pnpm"
+
+# Zsh plugins
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+# fzf directory search
+brew "fd"
