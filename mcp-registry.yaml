@@ -69,28 +69,6 @@ servers:
       expect_status: 405
     description: "Sanity CMS integration"
 
-  exa:
-    transport: http
-    url: "https://mcp.exa.ai/mcp?exaApiKey=${EXA_API_KEY}&tools=web_search_exa,web_search_advanced_exa,get_code_context_exa,crawling_exa"
-    scope: [universal]
-    client: [claude-code, claude-desktop]
-    health:
-      endpoint: "https://mcp.exa.ai/mcp"
-      method: GET
-      expect_status: 405
-    description: "Semantic web search and content retrieval"
-
-  firecrawl:
-    transport: http
-    url: "https://mcp.firecrawl.dev/${FIRECRAWL_API_KEY}/v2/mcp"
-    scope: [universal]
-    client: [claude-code, claude-desktop]
-    health:
-      endpoint: "https://mcp.firecrawl.dev/v2/mcp"
-      method: GET
-      expect_status: 400
-    description: "Web scraping, crawling, and content extraction"
-
   # Cloud connectors (tracked for inventory, generator skips these)
   google-workspace:
     managed: cloud
