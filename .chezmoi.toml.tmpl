@@ -1,0 +1,8 @@
+# chezmoi configuration - generated on first init
+# Values prompted once and stored in ~/.config/chezmoi/chezmoi.toml
+
+[data]
+    name = {{ promptStringOnce . "name" "Full name" | quote }}
+    email = {{ promptStringOnce . "email" "Personal email (bultot.nl)" | quote }}
+    work_email = {{ promptStringOnce . "work_email" "Work email (backbase)" | quote }}
+    machine_type = {{ promptStringOnce . "machine_type" "Machine type (personal/work)" | quote }}
