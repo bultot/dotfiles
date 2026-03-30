@@ -37,3 +37,17 @@ load_op_token() {
     fi
 }
 load_op_token
+
+# Safe chezmoi apply: ensures 1Password token is loaded first
+chezmoi_apply() {
+    if [[ -z "${OP_SERVICE_ACCOUNT_TOKEN:-}" ]]; then
+        echo "OP_SERVICE_ACCOUNT_TOKEN not set. Running load_op_token..."
+        load_op_token
+    fi
+    if [[ -z "${OP_SERVICE_ACCOUNT_TOKEN:-}" ]]; then
+        echo "ERROR: Could not load 1Password service account token from Keychain."
+        echo "Store it with: security add-generic-password -a \$USER -s op-service-account-token -w YOUR_TOKEN"
+        return 1
+    fi
+    chezmoi apply "$@"
+}

@@ -1,0 +1,4 @@
+# .env.example - safe to commit, shows what env vars are needed
+# Real values loaded via direnv + 1Password (see .envrc)
+# DATABASE_URL=postgres://user:password@localhost:5432/mydb
+# API_KEY=your-api-key-here

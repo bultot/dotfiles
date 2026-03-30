@@ -1,0 +1,7 @@
+# .envrc - project secrets from 1Password
+# Copy this file to your project root and adjust the op:// URIs
+# Requires: OP_SERVICE_ACCOUNT_TOKEN in environment (loaded by load_op_token)
+
+# Source the direnvrc helpers (automatic if ~/.config/direnv/direnvrc exists)
+# export DATABASE_URL="$(op_secret 'op://Integrations/myproject-db/connection-string')"
+# export API_KEY="$(op_secret 'op://Integrations/myproject/api-key')"

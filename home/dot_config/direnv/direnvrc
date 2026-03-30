@@ -1,0 +1,14 @@
+# direnvrc - loaded by direnv before .envrc
+# Provides 1Password secret loading for project-level .envrc files
+
+# Load a secret from 1Password
+# Usage in .envrc: export MY_VAR=$(op_secret "op://VaultName/item/field")
+op_secret() {
+    local uri="$1"
+    # op read caches internally with service account tokens, so this is fast after first call
+    op read "$uri" 2>/dev/null || {
+        log_error "Failed to read secret: $uri"
+        log_error "Ensure OP_SERVICE_ACCOUNT_TOKEN is set (load_op_token in shell init)"
+        return 1
+    }
+}
