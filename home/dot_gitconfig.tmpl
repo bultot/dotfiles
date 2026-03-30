@@ -1,0 +1,70 @@
+# ~/.gitconfig - managed by chezmoi
+# Identity auto-selected per directory via includeIf
+
+[user]
+    name = {{ .name }}
+
+[includeIf "gitdir:~/projects/personal/"]
+    path = ~/.config/git/config-personal
+
+[includeIf "gitdir:~/projects/backbase/"]
+    path = ~/.config/git/config-work
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+
+[core]
+    editor = vim
+    pager = bat --plain
+    autocrlf = input
+
+[diff]
+    colorMoved = default
+
+[merge]
+    conflictstyle = diff3
+
+[rerere]
+    enabled = true
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
+[commit]
+    gpgsign = true
+
+[tag]
+    gpgsign = true
+
+[credential "https://github.com"]
+    helper =
+    helper = !/opt/homebrew/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+    helper =
+    helper = !/opt/homebrew/bin/gh auth git-credential
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    lg = log --oneline --graph --decorate -20
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    amend = commit --amend --no-edit
