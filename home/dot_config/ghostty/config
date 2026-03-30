@@ -1,0 +1,45 @@
+# Ghostty configuration
+# Optimized for long Claude Code / agent sessions
+
+# Font
+font-family = JetBrains Mono
+font-size = 14
+
+# Scrollback - large buffer for long Claude sessions
+scrollback-limit = 100000
+
+# Shell integration (enables click-to-position, semantic prompts)
+shell-integration = zsh
+shell-integration-features = cursor,no-sudo,title,no-kitty-keyboard
+
+# Window
+window-padding-x = 8
+window-padding-y = 4
+window-save-state = always
+confirm-close-surface = false
+
+# Theme
+theme = GruvboxDark
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Mouse / clipboard
+copy-on-select = clipboard
+clipboard-trim-trailing-spaces = true
+mouse-scroll-multiplier = 3
+
+# Keybindings - macOS native feel
+keybind = super+t=new_tab
+keybind = super+w=close_surface
+keybind = super+shift+d=new_split:right
+keybind = super+d=new_split:down
+keybind = super+alt+left=goto_split:left
+keybind = super+alt+right=goto_split:right
+keybind = super+alt+up=goto_split:top
+keybind = super+alt+down=goto_split:bottom
+keybind = cmd+shift+u=copy_url_to_clipboard
+
+# Performance
+window-vsync = true
